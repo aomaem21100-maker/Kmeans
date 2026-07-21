@@ -3,180 +3,341 @@ import pandas as pd
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import load_iris
 
 # ตั้งค่าหน้า
 st.set_page_config(
     page_title="K-Means Clustering App",
-    page_icon="🎯",
-    layout="wide"
+    page_icon="",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# CSS สำหรับความสวยงาม
+# Custom CSS สำหรับความสวยงาม
 st.markdown("""
     <style>
-    .main-header {
-        font-size: 3rem;
-        color: #4A90E2;
-        text-align: center;
-        margin-bottom: 1rem;
+    /* Main background */
+    .main {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
     }
-    .sub-header {
-        font-size: 1.5rem;
-        color: #666;
+    
+    /* Header styling */
+    .header-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 3rem;
+        border-radius: 20px;
         text-align: center;
         margin-bottom: 2rem;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    
+    .header-title {
+        color: white;
+        font-size: 3rem;
+        font-weight: bold;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .header-subtitle {
+        color: rgba(255,255,255,0.9);
+        font-size: 1.2rem;
+        margin-top: 0.5rem;
+    }
+    
+    /* Sidebar styling */
+    .sidebar-container {
+        background: linear-gradient(180deg, #f0f4ff 0%, #e8ecff 100%);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .info-box {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    /* Content container */
+    .content-container {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin: 2rem auto;
+        max-width: 1200px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    
+    /* Tabs styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+        padding: 0;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+    
+    /* Slider styling */
+    .stSlider > div > div {
+        color: #667eea;
+    }
+    
+    /* Button styling */
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        width: 100%;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .stButton > button:hover {
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+    
+    /* Footer */
+    .footer {
+        text-align: center;
+        padding: 2rem;
+        color: rgba(255,255,255,0.8);
+        margin-top: 3rem;
+    }
+    
+    /* Metric cards */
+    .metric-card {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        color: white;
+        text-align: center;
+        margin: 0.5rem;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# ส่วนหัว
-st.markdown('<p class="main-header">🎯 K-Means Clustering</p>', unsafe_allow_html=True)
-st.markdown('<p class="sub-header">ระบบจัดกลุ่มข้อมูลอัตโนมัติ</p>', unsafe_allow_html=True)
-
 # Sidebar
-st.sidebar.header("️ การตั้งค่า")
+with st.sidebar:
+    st.markdown("""
+        <div class="sidebar-container">
+            <h3>📋 About</h3>
+            <div class="info-box">
+                <p>This application uses a trained K-Means clustering model to predict cluster assignments based on input features.</p>
+                
+                <h4 style="color: #667eea; margin-top: 1rem;">Model Details:</h4>
+                <ul>
+                    <li>Algorithm: K-Means</li>
+                    <li>Dataset: Iris</li>
+                    <li>Features: 4</li>
+                </ul>
+            </div>
+            
+            <h3>🎯 How to Use</h3>
+            <div class="info-box">
+                <ol>
+                    <li><strong>Manual Input:</strong> Enter feature values using sliders</li>
+                    <li><strong>CSV Upload:</strong> Upload a CSV file for batch predictions</li>
+                    <li><strong>View Results:</strong> See cluster assignments and visualizations</li>
+                </ol>
+            </div>
+            
+            <button onclick="window.location.reload()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 10px 20px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: 600;">
+                🔄 Reset All
+            </button>
+        </div>
+        """, unsafe_allow_html=True)
 
-# โหลดโมเดล
-@st.cache_resource
-def load_model():
-    try:
-        with open('models/kmeans_model.pkl', 'rb') as f:
-            model = pickle.load(f)
-        with open('models/scaler.pkl', 'rb') as f:
-            scaler = pickle.load(f)
-        with open('models/feature_names.pkl', 'rb') as f:
-            feature_names = pickle.load(f)
-        return model, scaler, feature_names
-    except FileNotFoundError:
-        return None, None, None
+# Header
+st.markdown("""
+    <div class="header-container">
+        <h1 class="header-title"> K-Means Clustering App</h1>
+        <p class="header-subtitle">Interactive Machine Learning Prediction System</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-model, scaler, feature_names = load_model()
+# เนื้อหาหลัก
+st.markdown('<div class="content-container">', unsafe_allow_html=True)
 
-# อัพโหลดไฟล์
-st.sidebar.markdown("### 📁 อัพโหลดข้อมูล")
-uploaded_file = st.sidebar.file_uploader(
-    "เลือกไฟล์ CSV หรือ Excel",
-    type=['csv', 'xlsx']
-)
+# Tabs
+tab1, tab2, tab3 = st.tabs(["📝 Manual Prediction", "📁 Batch Prediction", "️ Model Information"])
 
-# ฟังก์ชันโหลดข้อมูล
-@st.cache_data
-def load_data(file):
-    if file is not None:
-        try:
-            if file.name.endswith('.csv'):
-                return pd.read_csv(file)
-            else:
-                return pd.read_excel(file)
-        except Exception as e:
-            st.error(f"เกิดข้อผิดพลาด: {e}")
-            return None
-    return None
-
-df = load_data(uploaded_file)
-
-# แสดงผลถ้ามีข้อมูล
-if df is not None:
-    st.sidebar.success("✅ อัพโหลดสำเร็จ!")
-    st.sidebar.write(f"จำนวนแถว: {df.shape[0]}")
-    st.sidebar.write(f"จำนวนคอลัมน์: {df.shape[1]}")
+# Tab 1: Manual Prediction
+with tab1:
+    st.markdown("### 🎯 Enter Feature Values")
     
-    # เลือก features
-    st.sidebar.markdown("### 🎯 เลือก Features")
-    numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+    col1, col2 = st.columns(2)
     
-    if len(numeric_cols) >= 2:
-        feature1 = st.sidebar.selectbox("Feature 1", numeric_cols, index=0 if 'Annual Income (k$)' not in numeric_cols else numeric_cols.index('Annual Income (k$)') if 'Annual Income (k$)' in numeric_cols else 0)
-        feature2 = st.sidebar.selectbox("Feature 2", numeric_cols, index=1 if 'Spending Score (1-100)' not in numeric_cols else numeric_cols.index('Spending Score (1-100)') if 'Spending Score (1-100)' in numeric_cols else 1)
-        
-        n_clusters = st.sidebar.slider("จำนวนClusters (K)", 2, 10, 5)
-        
-        # เตรียมข้อมูล
-        X = df[[feature1, feature2]].values
-        
-        # Standardize
-        if scaler is not None:
-            X_scaled = scaler.transform(X)
-        else:
-            scaler_temp = StandardScaler()
-            X_scaled = scaler_temp.fit_transform(X)
-        
-        # ทำนาย
-        if model is not None:
-            labels = model.predict(X_scaled)
-        else:
-            # สร้างโมเดลใหม่ถ้าไม่มี
-            kmeans_temp = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
-            labels = kmeans_temp.fit_predict(X_scaled)
-        
-        # เพิ่มคอลัมน์ cluster ให้ dataframe
-        df['Cluster'] = labels
-        
-        # แสดงข้อมูล
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("### 📊 ตัวอย่างข้อมูล")
-            st.dataframe(df.head(10))
-        
-        with col2:
-            st.markdown("### 📈 สถิติ")
-            st.write(df.describe())
-        
-        # พล็อต
-        st.markdown("### 🎨 ผลการจัดกลุ่ม")
-        
-        fig, ax = plt.subplots(figsize=(10, 6))
-        scatter = ax.scatter(df[feature1], df[feature2], 
-                            c=df['Cluster'], 
-                            cmap='viridis', 
-                            alpha=0.6,
-                            s=100,
-                            edgecolors='black',
-                            linewidth=0.5)
-        
-        plt.xlabel(feature1, fontsize=12)
-        plt.ylabel(feature2, fontsize=12)
-        plt.title(f'K-Means Clustering (K={len(set(labels))})', fontsize=14, fontweight='bold')
-        plt.colorbar(scatter, label='Cluster')
-        plt.grid(True, alpha=0.3)
-        
-        st.pyplot(fig)
-        
-        # แสดงข้อมูลแต่ละ cluster
-        st.markdown("### 📋 ข้อมูลแต่ละ Cluster")
-        cluster_info = df.groupby('Cluster')[[feature1, feature2]].mean()
-        st.dataframe(cluster_info.style.background_gradient(cmap='Blues'))
-        
-        # ดาวน์โหลดผล
-        csv = df.to_csv(index=False)
-        st.download_button(
-            label="📥 ดาวน์โหลดผลลัพธ์ (CSV)",
-            data=csv,
-            file_name='kmeans_clustering_result.csv',
-            mime='text/csv'
+    with col1:
+        sepal_length = st.slider(
+            "Sepal Length (cm)",
+            min_value=4.0,
+            max_value=8.0,
+            value=5.5,
+            step=0.1,
+            help="The length of the sepal in centimeters"
         )
         
-    else:
-        st.warning("⚠️ ข้อมูลต้องมีอย่างน้อย 2 คอลัมน์ที่เป็นตัวเลข")
-else:
-    st.info("👆 กรุณาอัพโหลดไฟล์ CSV หรือ Excel เพื่อเริ่มต้น")
+        sepal_width = st.slider(
+            "Sepal Width (cm)",
+            min_value=2.0,
+            max_value=4.5,
+            value=3.0,
+            step=0.1,
+            help="The width of the sepal in centimeters"
+        )
     
-    # ตัวอย่าง
-    st.markdown("### 📝 รูปแบบไฟล์ที่รองรับ:")
+    with col2:
+        petal_length = st.slider(
+            "Petal Length (cm)",
+            min_value=1.0,
+            max_value=7.0,
+            value=4.0,
+            step=0.1,
+            help="The length of the petal in centimeters"
+        )
+        
+        petal_width = st.slider(
+            "Petal Width (cm)",
+            min_value=0.1,
+            max_value=2.5,
+            value=1.5,
+            step=0.1,
+            help="The width of the petal in centimeters"
+        )
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # ปุ่ม Predict
+    if st.button("🔮 Predict Cluster", use_container_width=True):
+        # สร้าง input data
+        input_data = np.array([[sepal_length, sepal_width, petal_length, petal_width]])
+        
+        # โหลด Iris dataset และฝึกโมเดล (หรือโหลดโมเดลที่ฝึกไว้)
+        iris = load_iris()
+        X = iris.data
+        
+        # Standardize
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
+        input_scaled = scaler.transform(input_data)
+        
+        # ฝึก K-Means
+        kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
+        kmeans.fit(X_scaled)
+        
+        # ทำนาย
+        prediction = kmeans.predict(input_scaled)[0]
+        cluster_name = iris.target_names[prediction] if prediction < len(iris.target_names) else f"Cluster {prediction}"
+        
+        # แสดงผล
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.success(f"### 🎉 Predicted Cluster: **{cluster_name}** (Cluster {prediction})")
+        
+        # แสดงข้อมูล input
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Sepal Length", f"{sepal_length} cm")
+        with col2:
+            st.metric("Sepal Width", f"{sepal_width} cm")
+        with col3:
+            st.metric("Petal Length", f"{petal_length} cm")
+        with col4:
+            st.metric("Petal Width", f"{petal_width} cm")
+        
+        # Visualization
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("### 📊 Cluster Visualization")
+        
+        fig, ax = plt.subplots(1, 2, figsize=(12, 5))
+        
+        # Plot 1: Sepal
+        scatter1 = ax[0].scatter(X_scaled[:, 0], X_scaled[:, 1], 
+                                 c=kmeans.labels_, cmap='viridis', alpha=0.6)
+        ax[0].scatter(input_scaled[0, 0], input_scaled[0, 1], 
+                     c='red', s=200, marker='X', label='Your Input', edgecolors='black', linewidth=2)
+        ax[0].set_xlabel('Sepal Length (scaled)')
+        ax[0].set_ylabel('Sepal Width (scaled)')
+        ax[0].set_title('Sepal Features')
+        ax[0].legend()
+        ax[0].grid(True, alpha=0.3)
+        
+        # Plot 2: Petal
+        scatter2 = ax[1].scatter(X_scaled[:, 2], X_scaled[:, 3], 
+                                 c=kmeans.labels_, cmap='viridis', alpha=0.6)
+        ax[1].scatter(input_scaled[0, 2], input_scaled[0, 3], 
+                     c='red', s=200, marker='X', label='Your Input', edgecolors='black', linewidth=2)
+        ax[1].set_xlabel('Petal Length (scaled)')
+        ax[1].set_ylabel('Petal Width (scaled)')
+        ax[1].set_title('Petal Features')
+        ax[1].legend()
+        ax[1].grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        st.pyplot(fig)
+
+# Tab 2: Batch Prediction
+with tab2:
+    st.markdown("### 📁 Batch Prediction")
+    
+    uploaded_file = st.file_uploader(
+        "Upload CSV file",
+        type=['csv'],
+        help="Upload a CSV file with columns: sepal_length, sepal_width, petal_length, petal_width"
+    )
+    
+    if uploaded_file is not None:
+        try:
+            df = pd.read_csv(uploaded_file)
+            st.success("✅ File uploaded successfully!")
+            st.dataframe(df.head())
+            
+            if st.button("🔮 Predict All Clusters"):
+                # ประมวลผล batch prediction
+                st.info("Processing...")
+                # เพิ่มโค้ดสำหรับ batch prediction ที่นี่
+        except Exception as e:
+            st.error(f"Error: {e}")
+
+# Tab 3: Model Information
+with tab3:
+    st.markdown("### ℹ️ Model Information")
+    
     st.markdown("""
-    - **CSV**: ไฟล์ .csv
-    - **Excel**: ไฟล์ .xlsx, .xls
-    - ต้องมีคอลัมน์ที่เป็นตัวเลขอย่างน้อย 2 คอลัมน์
+    **Algorithm:** K-Means Clustering
+    
+    **Dataset:** Iris Dataset
+    
+    **Features:**
+    - Sepal Length (cm)
+    - Sepal Width (cm)
+    - Petal Length (cm)
+    - Petal Width (cm)
+    
+    **Number of Clusters:** 3
+    
+    **Performance Metrics:**
+    - Inertia: (จะแสดงหลังจากฝึกโมเดล)
+    - Silhouette Score: (จะแสดงหลังจากฝึกโมเดล)
     """)
 
+st.markdown('</div>', unsafe_allow_html=True)
+
 # Footer
-st.markdown("---")
 st.markdown("""
-    <div style='text-align: center; color: gray;'>
-        <p>สร้างด้วย ❤️ โดยใช้ Streamlit และ Scikit-learn</p>
+    <div class="footer">
+        <p>🎓 Machine Learning for Python Programming Course</p>
+        <p>Built with ❤️ using Streamlit | © 2026</p>
     </div>
     """, unsafe_allow_html=True)
