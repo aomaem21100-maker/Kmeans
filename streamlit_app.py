@@ -10,14 +10,20 @@ from sklearn.datasets import load_iris
 # ตั้งค่าหน้า
 st.set_page_config(
     page_title="K-Means Clustering App",
-    page_icon="",
+    page_icon="🔮",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"  # ซ่อน Sidebar ตั้งแต่เริ่ม
 )
 
 # Custom CSS สำหรับความสวยงาม
 st.markdown("""
     <style>
+    /* ซ่อน Sidebar และเมนูทั้งหมด */
+    #MainMenu {visibility: hidden;}
+    header {visibility: hidden;}
+    .css-1d391kg {display: none;}
+    section[data-testid="stSidebar"] {display: none;}
+    
     /* Main background */
     .main {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -30,7 +36,8 @@ st.markdown("""
         padding: 3rem;
         border-radius: 20px;
         text-align: center;
-        margin-bottom: 2rem;
+        margin: 2rem auto;
+        max-width: 1200px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
     }
     
@@ -46,22 +53,6 @@ st.markdown("""
         color: rgba(255,255,255,0.9);
         font-size: 1.2rem;
         margin-top: 0.5rem;
-    }
-    
-    /* Sidebar styling */
-    .sidebar-container {
-        background: linear-gradient(180deg, #f0f4ff 0%, #e8ecff 100%);
-        border-radius: 15px;
-        padding: 1.5rem;
-        margin: 1rem;
-    }
-    
-    .info-box {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        margin: 1rem 0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
     /* Content container */
@@ -84,11 +75,6 @@ st.markdown("""
         padding: 10px 20px;
         border-radius: 8px;
         font-weight: 600;
-    }
-    
-    /* Slider styling */
-    .stSlider > div > div {
-        color: #667eea;
     }
     
     /* Button styling */
@@ -115,54 +101,13 @@ st.markdown("""
         color: rgba(255,255,255,0.8);
         margin-top: 3rem;
     }
-    
-    /* Metric cards */
-    .metric-card {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        padding: 1.5rem;
-        border-radius: 12px;
-        color: white;
-        text-align: center;
-        margin: 0.5rem;
-    }
     </style>
     """, unsafe_allow_html=True)
-
-# Sidebar
-with st.sidebar:
-    st.markdown("""
-        <div class="sidebar-container">
-            <h3>📋 About</h3>
-            <div class="info-box">
-                <p>This application uses a trained K-Means clustering model to predict cluster assignments based on input features.</p>
-                
-                <h4 style="color: #667eea; margin-top: 1rem;">Model Details:</h4>
-                <ul>
-                    <li>Algorithm: K-Means</li>
-                    <li>Dataset: Iris</li>
-                    <li>Features: 4</li>
-                </ul>
-            </div>
-            
-            <h3>🎯 How to Use</h3>
-            <div class="info-box">
-                <ol>
-                    <li><strong>Manual Input:</strong> Enter feature values using sliders</li>
-                    <li><strong>CSV Upload:</strong> Upload a CSV file for batch predictions</li>
-                    <li><strong>View Results:</strong> See cluster assignments and visualizations</li>
-                </ol>
-            </div>
-            
-            <button onclick="window.location.reload()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 10px 20px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: 600;">
-                🔄 Reset All
-            </button>
-        </div>
-        """, unsafe_allow_html=True)
 
 # Header
 st.markdown("""
     <div class="header-container">
-        <h1 class="header-title"> K-Means Clustering App</h1>
+        <h1 class="header-title">🔮 K-Means Clustering App</h1>
         <p class="header-subtitle">Interactive Machine Learning Prediction System</p>
     </div>
     """, unsafe_allow_html=True)
@@ -224,7 +169,7 @@ with tab1:
         # สร้าง input data
         input_data = np.array([[sepal_length, sepal_width, petal_length, petal_width]])
         
-        # โหลด Iris dataset และฝึกโมเดล (หรือโหลดโมเดลที่ฝึกไว้)
+        # โหลด Iris dataset และฝึกโมเดล
         iris = load_iris()
         X = iris.data
         
@@ -303,10 +248,8 @@ with tab2:
             st.success("✅ File uploaded successfully!")
             st.dataframe(df.head())
             
-            if st.button("🔮 Predict All Clusters"):
-                # ประมวลผล batch prediction
+            if st.button(" Predict All Clusters"):
                 st.info("Processing...")
-                # เพิ่มโค้ดสำหรับ batch prediction ที่นี่
         except Exception as e:
             st.error(f"Error: {e}")
 
