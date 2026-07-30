@@ -29,7 +29,7 @@ st.set_page_config(
     page_title="K-Means Clustering App",
     page_icon="🔮",
     layout="wide",
-    initial_sidebar_state="expanded"  # เปลี่ยนเป็น expanded เพื่อแสดง Sidebar
+    initial_sidebar_state="expanded"
 )
 
 # Custom CSS สำหรับความสวยงาม
@@ -106,134 +106,68 @@ st.markdown("""
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         transform: translateY(-2px);
     }
-    
-    /* Footer */
-    .footer {
-        text-align: center;
-        padding: 2.5rem 2rem;
-        margin-top: 3rem;
-        background: white;
-        border-radius: 20px 20px 0 0;
-        box-shadow: 0 -5px 20px rgba(0,0,0,0.03);
-    }
     </style>
     """, unsafe_allow_html=True)
 
 # Header
 st.markdown("""
     <div class="header-container">
-        <h1 class="header-title">🔮 K-Means Clustering App</h1>
+        <h1 class="header-title"> K-Means Clustering App</h1>
         <p class="header-subtitle">Interactive Machine Learning Prediction System</p>
     </div>
     """, unsafe_allow_html=True)
 
 # ==================== Sidebar with Developer Info ====================
 with st.sidebar:
-    st.markdown("### 👨💻 ผู้พัฒนา")
+    st.markdown("### 👨‍ ผู้พัฒนา")
     
     # แสดงรูปผู้พัฒนา (สี่เหลี่ยมขอบมน)
     try:
         st.image(
             IMAGE_TO_USE,
             width=200,
-            caption="",
             use_container_width=True
         )
     except Exception:
         st.image(
             FALLBACK_IMAGE,
             width=200,
-            caption="",
             use_container_width=True
         )
     
     st.markdown("<br>", unsafe_allow_html=True)
     
     # กล่องข้อมูลผู้พัฒนา (สไตล์สีเขียว)
-    st.markdown("""
-    <style>
-    /* Main background */
-    .main {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        min-height: 100vh;
-    }
-    
-    /* Header styling */
-    .header-container {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 3rem;
-        border-radius: 20px;
+    st.markdown(f"""
+    <div style="
+        background: linear-gradient(135deg, rgba(56, 142, 60, 0.12), rgba(255, 255, 255, 0.02));
+        border: 1px solid rgba(56, 142, 60, 0.25);
+        border-radius: 16px;
+        padding: 1.2rem;
         text-align: center;
-        margin: 2rem auto;
-        max-width: 1200px;
-        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
-    }
-    
-    .header-title {
-        color: white;
-        font-size: 3rem;
-        font-weight: bold;
-        margin: 0;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    }
-    
-    .header-subtitle {
-        color: rgba(255,255,255,0.9);
-        font-size: 1.2rem;
         margin-top: 0.5rem;
-    }
-    
-    /* Content container */
-    .content-container {
-        background: white;
-        border-radius: 20px;
-        padding: 2.5rem;
-        margin: 2rem auto;
-        max-width: 1200px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-    }
-    
-    /* Tabs styling */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-        padding: 0;
-    }
-    
-    .stTabs [data-baseweb="tab"] {
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: 600;
-    }
-    
-    /* Button styling */
-    .stButton > button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 1.1rem;
-        width: 100%;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        transition: all 0.3s ease;
-    }
-    
-    .stButton > button:hover {
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        transform: translateY(-2px);
-    }
-    
-    /* Footer */
-    .footer {
-        text-align: center;
-        padding: 2.5rem 2rem;
-        margin-top: 3rem;
-        background: white;
-        border-radius: 20px 20px 0 0;
-        box-shadow: 0 -5px 20px rgba(0,0,0,0.03);
-    }
-    </style>
+    ">
+        <p style="
+            color: #2E7D32;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0.3rem 0;
+        ">{DEVELOPER_NAME}</p>
+        
+        <p style="
+            color: #388E3C;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 0.2rem 0;
+        ">🆔 รหัสนักศึกษา: {DEVELOPER_ID}</p>
+        
+        <p style="
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            font-style: italic;
+            margin: 0.2rem 0;
+        ">ML with Python Developer</p>
+    </div>
     """, unsafe_allow_html=True)
 
 # เนื้อหาหลัก
@@ -308,7 +242,7 @@ with tab1:
         distances_df = pd.DataFrame({
             'Cluster': [f'Cluster {i}' for i in range(len(distances))],
             'Distance': [f"{d:.4f}" for d in distances],
-            'Status': ['✅ Nearest (Assigned)' if i == prediction else '' for i in range(len(distances))]
+            'Status': ['✅ Nearest (Assigned)' if i == prediction else '❌' for i in range(len(distances))]
         })
         st.dataframe(distances_df, use_container_width=True, hide_index=True)
         
@@ -371,21 +305,58 @@ with tab3:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# ==================== Footer with Developer Info ====================
-footer_html = f"""
-<div class="footer">
-    <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-        <img src="{IMAGE_TO_USE}" 
-             style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #667eea; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); flex-shrink: 0;"
-             onerror="this.src='{FALLBACK_IMAGE}'">
-        <div style="text-align: left;">
-            <p style="font-size: 1.4rem; font-weight: bold; color: #333; margin: 0;">👨‍💻 พัฒนาโดย: นายจตุรภัทร สถาปิตานนท์</p>
-            <p style="font-size: 1.1rem; color: #667eea; font-weight: 600; margin: 0.3rem 0;"> รหัสนักศึกษา: 024</p>
-            <p style="font-size: 0.95rem; color: #666; margin: 0.5rem 0 0.2rem 0;">🎓 Machine Learning for Python Programming Course</p>
-            <p style="font-size: 0.85rem; color: #999; margin: 0.2rem 0 0 0;">Built with ❤️ using Streamlit | © 2026</p>
-        </div>
-    </div>
-</div>
-"""
+# ==================== Footer with Developer Info (แบบใหม่ - สวยและเสถียร) ====================
+st.markdown("---")
 
-st.markdown(footer_html, unsafe_allow_html=True)
+# ใช้ columns เพื่อจัด layout (เสถียรกว่า HTML flexbox)
+footer_col1, footer_col2 = st.columns([1, 3], gap="large")
+
+with footer_col1:
+    # แสดงรูปผู้พัฒนา
+    try:
+        st.image(
+            IMAGE_TO_USE,
+            use_container_width=True,
+            clamp=True
+        )
+    except Exception:
+        st.image(
+            FALLBACK_IMAGE,
+            use_container_width=True,
+            clamp=True
+        )
+
+with footer_col2:
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style="padding: 0.5rem 0;">
+        <h3 style="
+            color: #667eea;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 0 0.5rem 0;
+        ">👨‍💻 พัฒนาโดย: {DEVELOPER_NAME}</h3>
+        
+        <p style="
+            color: #764ba2;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0.3rem 0;
+        ">🆔 รหัสนักศึกษา: {DEVELOPER_ID}</p>
+        
+        <p style="
+            color: #666;
+            font-size: 1rem;
+            margin: 0.5rem 0 0.3rem 0;
+        ">🎓 Machine Learning for Python Programming Course</p>
+        
+        <p style="
+            color: #999;
+            font-size: 0.9rem;
+            margin: 0.3rem 0 0 0;
+        ">Built with ❤️ using Streamlit | © 2026</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# เพิ่ม spacing ด้านล่าง
+st.markdown("<br><br>", unsafe_allow_html=True)
