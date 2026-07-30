@@ -22,7 +22,8 @@ FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=20
 if os.path.exists(DEVELOPER_IMAGE_PATH):
     IMAGE_TO_USE = DEVELOPER_IMAGE_PATH
 else:
-    IMAGE_TO_USE = FALLBACK_IMAGE
+    IMAGE_TO_USE = DEVELOPER_IMAGE_PATH = "image/024.jpg"
+
 
 # ตั้งค่าหน้า
 st.set_page_config(
