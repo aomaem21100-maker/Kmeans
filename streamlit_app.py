@@ -12,36 +12,29 @@ from sklearn.datasets import load_iris
 DEVELOPER_NAME = "นายจตุรภัทร สถาปิตานนท์"
 DEVELOPER_ID = "024"
 
-# ✅ Path ของรูป (ถูกต้องตามโครงสร้างไฟล์ของคุณ)
+# ✅ Path ของรูป
 DEVELOPER_IMAGE_PATH = "image/024.jpg"
 
 # ✅ รูปสำรองกรณีหาไฟล์ไม่เจอ
-FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=200&background=667eea&color=fff&bold=true"
+FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=200&background=388E3C&color=fff&bold=true"
 
 # ✅ ตรวจสอบและกำหนดค่า IMAGE_TO_USE
 if os.path.exists(DEVELOPER_IMAGE_PATH):
     IMAGE_TO_USE = DEVELOPER_IMAGE_PATH
 else:
-    IMAGE_TO_USE = DEVELOPER_IMAGE_PATH = "image/024.jpg"
-
+    IMAGE_TO_USE = FALLBACK_IMAGE
 
 # ตั้งค่าหน้า
 st.set_page_config(
     page_title="K-Means Clustering App",
     page_icon="🔮",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"  # เปลี่ยนเป็น expanded เพื่อแสดง Sidebar
 )
 
 # Custom CSS สำหรับความสวยงาม
 st.markdown("""
     <style>
-    /* ซ่อน Sidebar และเมนูทั้งหมด */
-    #MainMenu {visibility: hidden;}
-    header {visibility: hidden;}
-    .css-1d391kg {display: none;}
-    section[data-testid="stSidebar"] {display: none;}
-    
     /* Main background */
     .main {
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -134,11 +127,66 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
+# ==================== Sidebar with Developer Info ====================
+with st.sidebar:
+    st.markdown("### 👨💻 ผู้พัฒนา")
+    
+    # แสดงรูปผู้พัฒนา (สี่เหลี่ยมขอบมน)
+    try:
+        st.image(
+            IMAGE_TO_USE,
+            width=200,
+            caption="",
+            use_container_width=True
+        )
+    except Exception:
+        st.image(
+            FALLBACK_IMAGE,
+            width=200,
+            caption="",
+            use_container_width=True
+        )
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # กล่องข้อมูลผู้พัฒนา (สไตล์สีเขียว)
+    st.markdown(f"""
+    <div style="
+        background: linear-gradient(135deg, rgba(56, 142, 60, 0.12), rgba(255, 255, 255, 0.02));
+        border: 1px solid rgba(56, 142, 60, 0.25);
+        border-radius: 16px;
+        padding: 1.2rem;
+        text-align: center;
+        margin-top: 0.5rem;
+    ">
+        <p style="
+            color: #2E7D32;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0.3rem 0;
+        ">{DEVELOPER_NAME}</p>
+        
+        <p style="
+            color: #388E3C;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 0.2rem 0;
+        ">🆔 รหัสนักศึกษา: {DEVELOPER_ID}</p>
+        
+        <p style="
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            font-style: italic;
+            margin: 0.2rem 0;
+        ">ML with Python Developer</p>
+    </div>
+    """, unsafe_allow_html=True)
+
 # เนื้อหาหลัก
 st.markdown('<div class="content-container">', unsafe_allow_html=True)
 
 # Tabs
-tab1, tab2, tab3 = st.tabs(["📝 Manual Prediction", " Batch Prediction", "ℹ️ Model Information"])
+tab1, tab2, tab3 = st.tabs(["📝 Manual Prediction", "📁 Batch Prediction", "ℹ️ Model Information"])
 
 # ================= TAB 1: Manual Prediction =================
 with tab1:
@@ -206,7 +254,7 @@ with tab1:
         distances_df = pd.DataFrame({
             'Cluster': [f'Cluster {i}' for i in range(len(distances))],
             'Distance': [f"{d:.4f}" for d in distances],
-            'Status': ['✅ Nearest (Assigned)' if i == prediction else '❌' for i in range(len(distances))]
+            'Status': ['✅ Nearest (Assigned)' if i == prediction else '' for i in range(len(distances))]
         })
         st.dataframe(distances_df, use_container_width=True, hide_index=True)
         
@@ -258,7 +306,7 @@ with tab2:
 
 # ================= TAB 3: Model Information =================
 with tab3:
-    st.markdown("### ️ Model Information")
+    st.markdown("### ℹ️ Model Information")
     st.markdown("""
     - **Algorithm:** K-Means Clustering
     - **Dataset:** Iris Dataset (Built-in)
@@ -277,7 +325,7 @@ footer_html = f"""
              style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #667eea; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); flex-shrink: 0;"
              onerror="this.src='{FALLBACK_IMAGE}'">
         <div style="text-align: left;">
-            <p style="font-size: 1.4rem; font-weight: bold; color: #333; margin: 0;">👨‍ พัฒนาโดย: นายจตุรภัทร สถาปิตานนท์</p>
+            <p style="font-size: 1.4rem; font-weight: bold; color: #333; margin: 0;">👨‍💻 พัฒนาโดย: นายจตุรภัทร สถาปิตานนท์</p>
             <p style="font-size: 1.1rem; color: #667eea; font-weight: 600; margin: 0.3rem 0;"> รหัสนักศึกษา: 024</p>
             <p style="font-size: 0.95rem; color: #666; margin: 0.5rem 0 0.2rem 0;">🎓 Machine Learning for Python Programming Course</p>
             <p style="font-size: 0.85rem; color: #999; margin: 0.2rem 0 0 0;">Built with ❤️ using Streamlit | © 2026</p>
@@ -287,57 +335,3 @@ footer_html = f"""
 """
 
 st.markdown(footer_html, unsafe_allow_html=True)
-# ==================== Sidebar with Developer Info ====================
-with st.sidebar:
-    st.markdown("### 👨‍💻 ผู้พัฒนา")
-    
-    # แสดงรูปผู้พัฒนา (สี่เหลี่ยมขอบมน)
-    try:
-        st.image(
-            IMAGE_TO_USE,
-            width=200,
-            caption="",
-            use_container_width=True
-        )
-    except Exception:
-        st.image(
-            FALLBACK_IMAGE,
-            width=200,
-            caption="",
-            use_container_width=True
-        )
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # กล่องข้อมูลผู้พัฒนา (สไตล์สีเขียว)
-    st.markdown(f"""
-    <div style="
-        background: linear-gradient(135deg, rgba(56, 142, 60, 0.12), rgba(255, 255, 255, 0.02));
-        border: 1px solid rgba(56, 142, 60, 0.25);
-        border-radius: 16px;
-        padding: 1.2rem;
-        text-align: center;
-        margin-top: 0.5rem;
-    ">
-        <p style="
-            color: #2E7D32;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0.3rem 0;
-        ">{DEVELOPER_NAME}</p>
-        
-        <p style="
-            color: #388E3C;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin: 0.2rem 0;
-        ">🆔 รหัสนักศึกษา: {DEVELOPER_ID}</p>
-        
-        <p style="
-            color: #7f8c8d;
-            font-size: 0.85rem;
-            font-style: italic;
-            margin: 0.2rem 0;
-        ">ML with Python Developer</p>
-    </div>
-    """, unsafe_allow_html=True)
