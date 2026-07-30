@@ -276,23 +276,20 @@ with tab3:
 st.markdown('</div>', unsafe_allow_html=True)
 
 # ==================== Footer with Developer Info ====================
-st.markdown(f"""
-    <div class="footer">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-            
-            <!-- รูปผู้พัฒนา (มีระบบป้องกัน Error หากรูปโหลดไม่ได้) -->
-            <img src="{IMAGE_TO_USE}" 
-                 style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #667eea; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); flex-shrink: 0;"
-                 onerror="this.src='{FALLBACK_IMAGE}'">
-            
-            <!-- ข้อความ -->
-            <div style="text-align: left;">
-                <p style="font-size: 1.4rem; font-weight: bold; color: #333; margin: 0;">👨‍💻 พัฒนาโดย: นายจตุรภัทร สถาปิตานนท์</p>
-                <p style="font-size: 1.1rem; color: #667eea; font-weight: 600; margin: 0.3rem 0;">🆔 รหัสนักศึกษา: 024</p>
-                <p style="font-size: 0.95rem; color: #666; margin: 0.5rem 0 0.2rem 0;">🎓 Machine Learning for Python Programming Course</p>
-                <p style="font-size: 0.85rem; color: #999; margin: 0.2rem 0 0 0;">Built with ❤️ using Streamlit | © 2026</p>
-            </div>
-            
+footer_html = f"""
+<div class="footer">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+        <img src="{IMAGE_TO_USE}" 
+             style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #667eea; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); flex-shrink: 0;"
+             onerror="this.src='{FALLBACK_IMAGE}'">
+        <div style="text-align: left;">
+            <p style="font-size: 1.4rem; font-weight: bold; color: #333; margin: 0;">👨‍💻 พัฒนาโดย: นายจตุรภัทร สถาปิตานนท์</p>
+            <p style="font-size: 1.1rem; color: #667eea; font-weight: 600; margin: 0.3rem 0;">🆔 รหัสนักศึกษา: 024</p>
+            <p style="font-size: 0.95rem; color: #666; margin: 0.5rem 0 0.2rem 0;"> Machine Learning for Python Programming Course</p>
+            <p style="font-size: 0.85rem; color: #999; margin: 0.2rem 0 0 0;">Built with ❤️ using Streamlit | © 2026</p>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+"""
+
+st.markdown(footer_html, unsafe_allow_html=True)
