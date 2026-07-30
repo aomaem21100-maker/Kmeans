@@ -126,23 +126,15 @@ st.markdown("""
 with st.sidebar:
     st.markdown("### 👨‍💻 ผู้พัฒนา")
     
-    # แสดงรูปผู้พัฒนา (สี่เหลี่ยมขอบมน)
+    # แสดงรูปผู้พัฒนา
     try:
-        st.image(
-            IMAGE_TO_USE,
-            width=200,
-            use_container_width=True
-        )
+        st.image(IMAGE_TO_USE, width=200, use_container_width=True)
     except Exception:
-        st.image(
-            FALLBACK_IMAGE,
-            width=200,
-            use_container_width=True
-        )
+        st.image(FALLBACK_IMAGE, width=200, use_container_width=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # กล่องข้อมูลผู้พัฒนา (สไตล์สีเขียว)
+    # กล่องข้อมูลผู้พัฒนา
     st.markdown(f"""
     <div style="
         background: linear-gradient(135deg, rgba(56, 142, 60, 0.12), rgba(255, 255, 255, 0.02));
@@ -152,28 +144,17 @@ with st.sidebar:
         text-align: center;
         margin-top: 0.5rem;
     ">
-        <p style="
-            color: #2E7D32;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0.3rem 0;
-        ">{DEVELOPER_NAME}</p>
-        
-        <p style="
-            color: #388E3C;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin: 0.2rem 0;
-        ">🆔 รหัสนักศึกษา: {DEVELOPER_ID}</p>
-        
-        <p style="
-            color: #7f8c8d;
-            font-size: 0.85rem;
-            font-style: italic;
-            margin: 0.2rem 0;
-        ">ML with Python Developer</p>
+        <p style="color: #2E7D32; font-size: 1.1rem; font-weight: 700; margin: 0.3rem 0;">
+            {DEVELOPER_NAME}
+        </p>
+        <p style="color: #388E3C; font-size: 0.95rem; font-weight: 600; margin: 0.2rem 0;">
+             รหัสนักศึกษา: {DEVELOPER_ID}
+        </p>
+        <p style="color: #7f8c8d; font-size: 0.85rem; font-style: italic; margin: 0.2rem 0;">
+            ML with Python Developer
+        </p>
     </div>
-    """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)  # ✅ สำคัญมาก!
 
 # Header
 st.markdown("""
