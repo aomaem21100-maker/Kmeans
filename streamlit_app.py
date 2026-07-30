@@ -16,7 +16,7 @@ DEVELOPER_ID = "024"
 DEVELOPER_IMAGE_PATH = "image/024.jpg"
 
 # ✅ รูปสำรองกรณีหาไฟล์ไม่เจอ
-FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=200&background=388E3C&color=fff&bold=true"
+FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=200&background=667eea&color=fff&bold=true"
 
 # ✅ ตรวจสอบและกำหนดค่า IMAGE_TO_USE
 if os.path.exists(DEVELOPER_IMAGE_PATH):
@@ -112,14 +112,14 @@ st.markdown("""
 # Header
 st.markdown("""
     <div class="header-container">
-        <h1 class="header-title"> K-Means Clustering App</h1>
+        <h1 class="header-title">🔮 K-Means Clustering App</h1>
         <p class="header-subtitle">Interactive Machine Learning Prediction System</p>
     </div>
     """, unsafe_allow_html=True)
 
 # ==================== Sidebar with Developer Info ====================
 with st.sidebar:
-    st.markdown("### 👨‍ ผู้พัฒนา")
+    st.markdown("### 👨‍💻 ผู้พัฒนา")
     
     # แสดงรูปผู้พัฒนา (สี่เหลี่ยมขอบมน)
     try:
@@ -159,7 +159,7 @@ with st.sidebar:
             font-size: 0.95rem;
             font-weight: 600;
             margin: 0.2rem 0;
-        ">🆔 รหัสนักศึกษา: {DEVELOPER_ID}</p>
+        "> รหัสนักศึกษา: {DEVELOPER_ID}</p>
         
         <p style="
             color: #7f8c8d;
@@ -287,7 +287,7 @@ with tab2:
             st.success("✅ File uploaded successfully!")
             st.dataframe(df.head(), use_container_width=True)
             
-            if st.button("🔮 Predict All Clusters"):
+            if st.button(" Predict All Clusters"):
                 st.info("กำลังประมวลผล... (ฟีเจอร์นี้พร้อมสำหรับการพัฒนาต่อยอด)")
         except Exception as e:
             st.error(f"Error: {e}")
@@ -305,58 +305,86 @@ with tab3:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# ==================== Footer with Developer Info (แบบใหม่ - สวยและเสถียร) ====================
-st.markdown("---")
-
-# ใช้ columns เพื่อจัด layout (เสถียรกว่า HTML flexbox)
-footer_col1, footer_col2 = st.columns([1, 3], gap="large")
-
-with footer_col1:
-    # แสดงรูปผู้พัฒนา
-    try:
-        st.image(
-            IMAGE_TO_USE,
-            use_container_width=True,
-            clamp=True
-        )
-    except Exception:
-        st.image(
-            FALLBACK_IMAGE,
-            use_container_width=True,
-            clamp=True
-        )
-
-with footer_col2:
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown(f"""
-    <div style="padding: 0.5rem 0;">
-        <h3 style="
-            color: #667eea;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 0 0.5rem 0;
-        ">👨‍💻 พัฒนาโดย: {DEVELOPER_NAME}</h3>
+# ==================== Footer with Developer Info ====================
+footer_html = f"""
+<div style="
+    margin-top: 3rem;
+    padding: 2.5rem 2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+">
+    <div style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+        max-width: 800px;
+        margin: 0 auto;
+    ">
+        <!-- รูปผู้พัฒนา -->
+        <div style="flex-shrink: 0;">
+            <img src="{IMAGE_TO_USE}" 
+                 style="
+                    width: 140px; 
+                    height: 140px; 
+                    border-radius: 16px;
+                    object-fit: cover; 
+                    border: 4px solid #667eea; 
+                    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                 "
+                 onerror="this.src='{FALLBACK_IMAGE}'">
+        </div>
         
-        <p style="
-            color: #764ba2;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 0.3rem 0;
-        ">🆔 รหัสนักศึกษา: {DEVELOPER_ID}</p>
-        
-        <p style="
-            color: #666;
-            font-size: 1rem;
-            margin: 0.5rem 0 0.3rem 0;
-        ">🎓 Machine Learning for Python Programming Course</p>
-        
-        <p style="
-            color: #999;
-            font-size: 0.9rem;
-            margin: 0.3rem 0 0 0;
-        ">Built with ❤️ using Streamlit | © 2026</p>
+        <!-- ข้อความ -->
+        <div style="text-align: left; flex: 1; min-width: 250px;">
+            <p style="
+                font-size: 1.6rem; 
+                font-weight: 700; 
+                color: #2c3e50; 
+                margin: 0 0 0.5rem 0;
+                line-height: 1.3;
+            ">👨‍💻 พัฒนาโดย: นายจตุรภัทร สถาปิตานนท์</p>
+            
+            <p style="
+                font-size: 1.15rem; 
+                color: #667eea; 
+                font-weight: 600; 
+                margin: 0 0 0.4rem 0;
+            ">🆔 รหัสนักศึกษา: 024</p>
+            
+            <p style="
+                font-size: 1rem; 
+                color: #555; 
+                margin: 0.6rem 0 0.3rem 0;
+            ">🎓 Machine Learning for Python Programming Course</p>
+            
+            <p style="
+                font-size: 0.9rem; 
+                color: #888; 
+                margin: 0.3rem 0 0 0;
+            ">Built with ❤️ using Streamlit | © 2026</p>
+        </div>
     </div>
-    """, unsafe_allow_html=True)
+    
+    <!-- Divider -->
+    <div style="
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(102, 126, 234, 0.15);
+        text-align: center;
+    ">
+        <p style="
+            font-size: 0.85rem;
+            color: #999;
+            margin: 0;
+        ">
+             K-Means Clustering App • Interactive Machine Learning Prediction System
+        </p>
+    </div>
+</div>
+"""
 
-# เพิ่ม spacing ด้านล่าง
-st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown(footer_html, unsafe_allow_html=True)
