@@ -3,26 +3,37 @@ import pandas as pd
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
+import os
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import load_iris
+
+# ==================== Developer Info ====================
+DEVELOPER_NAME = "นายจตุรภัทร สถาปิตานนท์"
+DEVELOPER_ID = "024"
+DEVELOPER_IMAGE_PATH = "image/024.jpg"
+FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=200&background=388E3C&color=fff&bold=true"
+
+if os.path.exists(DEVELOPER_IMAGE_PATH):
+    IMAGE_TO_USE = DEVELOPER_IMAGE_PATH
+else:
+    IMAGE_TO_USE = FALLBACK_IMAGE
 
 # ตั้งค่าหน้า
 st.set_page_config(
     page_title="K-Means Clustering App",
     page_icon="🔮",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"  # ✅ เปลี่ยนเป็น expanded
 )
 
 # Custom CSS สำหรับความสวยงาม
 st.markdown("""
     <style>
-    /* ซ่อน Sidebar และเมนูทั้งหมด */
+    /* ซ่อนเมนู แต่ไม่ซ่อน Sidebar */
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     .css-1d391kg {display: none;}
-    section[data-testid="stSidebar"] {display: none;}
     
     /* Main background */
     .main {
@@ -103,7 +114,65 @@ st.markdown("""
         color: #666;
         margin-top: 3rem;
     }
+    
+    /* Sidebar custom style */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    }
     </style>
+    """, unsafe_allow_html=True)
+
+# ==================== Sidebar with Developer Info ====================
+with st.sidebar:
+    st.markdown("### 👨‍💻 ผู้พัฒนา")
+    
+    # แสดงรูปผู้พัฒนา (สี่เหลี่ยมขอบมน)
+    try:
+        st.image(
+            IMAGE_TO_USE,
+            width=200,
+            use_container_width=True
+        )
+    except Exception:
+        st.image(
+            FALLBACK_IMAGE,
+            width=200,
+            use_container_width=True
+        )
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # กล่องข้อมูลผู้พัฒนา (สไตล์สีเขียว)
+    st.markdown(f"""
+    <div style="
+        background: linear-gradient(135deg, rgba(56, 142, 60, 0.12), rgba(255, 255, 255, 0.02));
+        border: 1px solid rgba(56, 142, 60, 0.25);
+        border-radius: 16px;
+        padding: 1.2rem;
+        text-align: center;
+        margin-top: 0.5rem;
+    ">
+        <p style="
+            color: #2E7D32;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0.3rem 0;
+        ">{DEVELOPER_NAME}</p>
+        
+        <p style="
+            color: #388E3C;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 0.2rem 0;
+        ">🆔 รหัสนักศึกษา: {DEVELOPER_ID}</p>
+        
+        <p style="
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            font-style: italic;
+            margin: 0.2rem 0;
+        ">ML with Python Developer</p>
+    </div>
     """, unsafe_allow_html=True)
 
 # Header
@@ -118,7 +187,7 @@ st.markdown("""
 st.markdown('<div class="content-container">', unsafe_allow_html=True)
 
 # Tabs
-tab1, tab2, tab3 = st.tabs(["📝 Manual Prediction", "📁 Batch Prediction", "ℹ️ Model Information"])
+tab1, tab2, tab3 = st.tabs(["📝 Manual Prediction", "📁 Batch Prediction", "️ Model Information"])
 
 # ================= TAB 1: Manual Prediction =================
 with tab1:
@@ -240,7 +309,7 @@ with tab2:
             st.success("✅ File uploaded successfully!")
             st.dataframe(df.head(), use_container_width=True)
             
-            if st.button("🔮 Predict All Clusters"):
+            if st.button(" Predict All Clusters"):
                 st.info("กำลังประมวลผล... (ฟีเจอร์นี้พร้อมสำหรับการพัฒนาต่อยอด)")
         except Exception as e:
             st.error(f"Error: {e}")
@@ -263,59 +332,5 @@ st.markdown("""
     <div class="footer">
         <p>🎓 Machine Learning for Python Programming Course</p>
         <p>Built with ❤️ using Streamlit | © 2026</p>
-    </div>
-    """, unsafe_allow_html=True)
-# ==================== Sidebar with Developer Info ====================
-with st.sidebar:
-    st.markdown("### 👨‍💻 ผู้พัฒนา")
-    
-    # แสดงรูปผู้พัฒนา (สี่เหลี่ยมขอบมน)
-    try:
-        st.image(
-            IMAGE_TO_USE,
-            width=200,
-            caption="",
-            use_container_width=True
-        )
-    except Exception:
-        st.image(
-            FALLBACK_IMAGE,
-            width=200,
-            caption="",
-            use_container_width=True
-        )
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # กล่องข้อมูลผู้พัฒนา (สไตล์สีเขียว)
-    st.markdown(f"""
-    <div style="
-        background: linear-gradient(135deg, rgba(56, 142, 60, 0.12), rgba(255, 255, 255, 0.02));
-        border: 1px solid rgba(56, 142, 60, 0.25);
-        border-radius: 16px;
-        padding: 1.2rem;
-        text-align: center;
-        margin-top: 0.5rem;
-    ">
-        <p style="
-            color: #2E7D32;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0.3rem 0;
-        ">{DEVELOPER_NAME}</p>
-        
-        <p style="
-            color: #388E3C;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin: 0.2rem 0;
-        ">🆔 รหัสนักศึกษา: {DEVELOPER_ID}</p>
-        
-        <p style="
-            color: #7f8c8d;
-            font-size: 0.85rem;
-            font-style: italic;
-            margin: 0.2rem 0;
-        ">ML with Python Developer</p>
     </div>
     """, unsafe_allow_html=True)
