@@ -7,19 +7,31 @@ import os
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import load_iris
+
 # ==================== Developer Info ====================
 DEVELOPER_NAME = "นายจตุรภัทร สถาปิตานนท์"
 DEVELOPER_ID = "024"
 
-# ✅ กำหนดค่า IMAGE_TO_USE และ FALLBACK_IMAGE ให้เรียบร้อย
+# ✅ Path ของรูป (ถูกต้องตามโครงสร้างไฟล์ของคุณ)
+DEVELOPER_IMAGE_PATH = "image/024.jpg"
+
+# ✅ รูปสำรองกรณีหาไฟล์ไม่เจอ
 FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=200&background=667eea&color=fff&bold=true"
 
-# ตรวจสอบว่าไฟล์มีอยู่จริงหรือไม่
-DEVELOPER_IMAGE_PATH = "image/024.jpg"
+# ✅ ตรวจสอบและกำหนดค่า IMAGE_TO_USE
 if os.path.exists(DEVELOPER_IMAGE_PATH):
     IMAGE_TO_USE = DEVELOPER_IMAGE_PATH
 else:
     IMAGE_TO_USE = FALLBACK_IMAGE
+
+# ตั้งค่าหน้า
+st.set_page_config(
+    page_title="K-Means Clustering App",
+    page_icon="🔮",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
 # Custom CSS สำหรับความสวยงาม
 st.markdown("""
     <style>
@@ -125,7 +137,7 @@ st.markdown("""
 st.markdown('<div class="content-container">', unsafe_allow_html=True)
 
 # Tabs
-tab1, tab2, tab3 = st.tabs(["📝 Manual Prediction", "📁 Batch Prediction", "ℹ️ Model Information"])
+tab1, tab2, tab3 = st.tabs(["📝 Manual Prediction", " Batch Prediction", "ℹ️ Model Information"])
 
 # ================= TAB 1: Manual Prediction =================
 with tab1:
@@ -245,7 +257,7 @@ with tab2:
 
 # ================= TAB 3: Model Information =================
 with tab3:
-    st.markdown("### ℹ️ Model Information")
+    st.markdown("### ️ Model Information")
     st.markdown("""
     - **Algorithm:** K-Means Clustering
     - **Dataset:** Iris Dataset (Built-in)
@@ -262,10 +274,10 @@ footer_html = f"""
     <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; flex-wrap: wrap;">
         <img src="{IMAGE_TO_USE}" 
              style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #667eea; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); flex-shrink: 0;"
-             onerror="this.src='{DEVELOPER_IMAGE_PATH}'">
+             onerror="this.src='{FALLBACK_IMAGE}'">
         <div style="text-align: left;">
-            <p style="font-size: 1.4rem; font-weight: bold; color: #333; margin: 0;">👨‍💻 พัฒนาโดย: นายจตุรภัทร สถาปิตานนท์</p>
-            <p style="font-size: 1.1rem; color: #667eea; font-weight: 600; margin: 0.3rem 0;">🆔 รหัสนักศึกษา: 024</p>
+            <p style="font-size: 1.4rem; font-weight: bold; color: #333; margin: 0;">👨‍ พัฒนาโดย: นายจตุรภัทร สถาปิตานนท์</p>
+            <p style="font-size: 1.1rem; color: #667eea; font-weight: 600; margin: 0.3rem 0;"> รหัสนักศึกษา: 024</p>
             <p style="font-size: 0.95rem; color: #666; margin: 0.5rem 0 0.2rem 0;">🎓 Machine Learning for Python Programming Course</p>
             <p style="font-size: 0.85rem; color: #999; margin: 0.2rem 0 0 0;">Built with ❤️ using Streamlit | © 2026</p>
         </div>
