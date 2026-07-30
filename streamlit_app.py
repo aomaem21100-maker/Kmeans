@@ -7,21 +7,19 @@ import os
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import load_iris
-
 # ==================== Developer Info ====================
 DEVELOPER_NAME = "นายจตุรภัทร สถาปิตานนท์"
 DEVELOPER_ID = "024"
 
-# ใช้ relative path (ต้องอัปโหลดรูปเข้า GitHub ให้ถูกที่)
-DEVELOPER_IMAGE_PATH = "image/024.jpg"
-# ตั้งค่าหน้า
-st.set_page_config(
-    page_title="K-Means Clustering App",
-    page_icon="🔮",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+# ✅ กำหนดค่า IMAGE_TO_USE และ FALLBACK_IMAGE ให้เรียบร้อย
+FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=200&background=667eea&color=fff&bold=true"
 
+# ตรวจสอบว่าไฟล์มีอยู่จริงหรือไม่
+DEVELOPER_IMAGE_PATH = "image/024.jpg"
+if os.path.exists(DEVELOPER_IMAGE_PATH):
+    IMAGE_TO_USE = DEVELOPER_IMAGE_PATH
+else:
+    IMAGE_TO_USE = FALLBACK_IMAGE
 # Custom CSS สำหรับความสวยงาม
 st.markdown("""
     <style>
