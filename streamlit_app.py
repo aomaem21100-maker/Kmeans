@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
-import os  # เพิ่ม import os เพื่อตรวจสอบไฟล์
+import os
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import load_iris
@@ -12,7 +12,7 @@ from sklearn.datasets import load_iris
 DEVELOPER_NAME = "นายจตุรภัทร สถาปิตานนท์"
 DEVELOPER_ID = "024"
 
-# ใช้ relative path (ต้องอัปโหลดรูปเข้า GitHub ก่อน)
+# ใช้ relative path (ต้องอัปโหลดรูปเข้า GitHub ให้ถูกที่)
 DEVELOPER_IMAGE_PATH = "image/024.jpg"
 FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=200&background=667eea&color=fff&bold=true"
 
@@ -151,13 +151,11 @@ with tab1:
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # ปุ่ม Predict
     if st.button("🔮 Predict Cluster", use_container_width=True):
         input_features = [sepal_length, sepal_width, petal_length, petal_width]
         input_data = np.array([input_features])
         feature_names = ['Sepal Length', 'Sepal Width', 'Petal Length', 'Petal Width']
         
-        # โหลด Iris dataset และฝึกโมเดล
         iris = load_iris()
         X = iris.data
         
@@ -171,14 +169,11 @@ with tab1:
         prediction = int(kmeans.predict(input_scaled)[0])
         cluster_name = iris.target_names[prediction] if prediction < len(iris.target_names) else f"Cluster {prediction}"
         
-        # คำนวณระยะห่างเพื่อหา Confidence
         distances = np.linalg.norm(kmeans.cluster_centers_ - input_scaled, axis=1)
         confidence_calc = (1 / (distances[prediction] + 1e-10)) / sum(1 / (distances + 1e-10)) * 100
         
-        # --- แสดงผลแบบสวยงาม (Prediction Result UI) ---
         st.markdown("<br>", unsafe_allow_html=True)
         
-        # 1. Header ผลลัพธ์
         st.markdown(f"""
             <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 15px; text-align: center; color: white; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
                 <div style="font-size: 1.2rem; opacity: 0.9;">🔮 Prediction Result</div>
@@ -187,7 +182,6 @@ with tab1:
             </div>
             """, unsafe_allow_html=True)
             
-        # 2. Info Cards (3 ใบ)
         st.markdown(f"""
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
                 <div style="background: white; padding: 1.5rem; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-top: 4px solid #667eea;">
@@ -205,7 +199,6 @@ with tab1:
             </div>
             """, unsafe_allow_html=True)
             
-        # 3. Distances Table
         st.markdown("### 📏 Distances to All Cluster Centers")
         distances_df = pd.DataFrame({
             'Cluster': [f'Cluster {i}' for i in range(len(distances))],
@@ -214,7 +207,6 @@ with tab1:
         })
         st.dataframe(distances_df, use_container_width=True, hide_index=True)
         
-        # 4. Radar Chart Visualization
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("### 📊 Feature Visualization (Radar Chart)")
         
@@ -223,7 +215,6 @@ with tab1:
         angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
         angles += angles[:1]
         
-        # Normalize ค่าสำหรับวาดกราฟ (สเกล 0-5 เพื่อความสวยงาม)
         max_vals = X.max(axis=0)
         values = [v / m * 5 for v, m in zip(input_features, max_vals)]
         values += values[:1]
@@ -285,7 +276,7 @@ footer_html = f"""
         <div style="text-align: left;">
             <p style="font-size: 1.4rem; font-weight: bold; color: #333; margin: 0;">👨‍💻 พัฒนาโดย: นายจตุรภัทร สถาปิตานนท์</p>
             <p style="font-size: 1.1rem; color: #667eea; font-weight: 600; margin: 0.3rem 0;">🆔 รหัสนักศึกษา: 024</p>
-            <p style="font-size: 0.95rem; color: #666; margin: 0.5rem 0 0.2rem 0;"> Machine Learning for Python Programming Course</p>
+            <p style="font-size: 0.95rem; color: #666; margin: 0.5rem 0 0.2rem 0;">🎓 Machine Learning for Python Programming Course</p>
             <p style="font-size: 0.85rem; color: #999; margin: 0.2rem 0 0 0;">Built with ❤️ using Streamlit | © 2026</p>
         </div>
     </div>
