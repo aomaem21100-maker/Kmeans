@@ -14,13 +14,13 @@ DEVELOPER_ID = "024"
 
 # ใช้ relative path (ต้องอัปโหลดรูปเข้า GitHub ให้ถูกที่)
 DEVELOPER_IMAGE_PATH = "image/024.jpg"
-FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=200&background=667eea&color=fff&bold=true"
+
 
 # ตรวจสอบว่าไฟล์มีอยู่จริงหรือไม่
 if os.path.exists(DEVELOPER_IMAGE_PATH):
     IMAGE_TO_USE = DEVELOPER_IMAGE_PATH
 else:
-    IMAGE_TO_USE = FALLBACK_IMAGE
+    IMAGE_TO_USE = DEVELOPER_IMAGE_PATH
 
 # ตั้งค่าหน้า
 st.set_page_config(
@@ -272,7 +272,7 @@ footer_html = f"""
     <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; flex-wrap: wrap;">
         <img src="{IMAGE_TO_USE}" 
              style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #667eea; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); flex-shrink: 0;"
-             onerror="this.src='{FALLBACK_IMAGE}'">
+             onerror="this.src='{DEVELOPER_IMAGE_PATH}'">
         <div style="text-align: left;">
             <p style="font-size: 1.4rem; font-weight: bold; color: #333; margin: 0;">👨‍💻 พัฒนาโดย: นายจตุรภัทร สถาปิตานนท์</p>
             <p style="font-size: 1.1rem; color: #667eea; font-weight: 600; margin: 0.3rem 0;">🆔 รหัสนักศึกษา: 024</p>
