@@ -150,36 +150,90 @@ with st.sidebar:
     st.markdown("<br>", unsafe_allow_html=True)
     
     # กล่องข้อมูลผู้พัฒนา (สไตล์สีเขียว)
-    st.markdown(f"""
-    <div style="
-        background: linear-gradient(135deg, rgba(56, 142, 60, 0.12), rgba(255, 255, 255, 0.02));
-        border: 1px solid rgba(56, 142, 60, 0.25);
-        border-radius: 16px;
-        padding: 1.2rem;
+    st.markdown("""
+    <style>
+    /* Main background */
+    .main {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+    }
+    
+    /* Header styling */
+    .header-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 3rem;
+        border-radius: 20px;
         text-align: center;
+        margin: 2rem auto;
+        max-width: 1200px;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+    }
+    
+    .header-title {
+        color: white;
+        font-size: 3rem;
+        font-weight: bold;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .header-subtitle {
+        color: rgba(255,255,255,0.9);
+        font-size: 1.2rem;
         margin-top: 0.5rem;
-    ">
-        <p style="
-            color: #2E7D32;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0.3rem 0;
-        ">{DEVELOPER_NAME}</p>
-        
-        <p style="
-            color: #388E3C;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin: 0.2rem 0;
-        ">🆔 รหัสนักศึกษา: {DEVELOPER_ID}</p>
-        
-        <p style="
-            color: #7f8c8d;
-            font-size: 0.85rem;
-            font-style: italic;
-            margin: 0.2rem 0;
-        ">ML with Python Developer</p>
-    </div>
+    }
+    
+    /* Content container */
+    .content-container {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin: 2rem auto;
+        max-width: 1200px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    }
+    
+    /* Tabs styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+        padding: 0;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+    
+    /* Button styling */
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        width: 100%;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s ease;
+    }
+    
+    .stButton > button:hover {
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        transform: translateY(-2px);
+    }
+    
+    /* Footer */
+    .footer {
+        text-align: center;
+        padding: 2.5rem 2rem;
+        margin-top: 3rem;
+        background: white;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.03);
+    }
+    </style>
     """, unsafe_allow_html=True)
 
 # เนื้อหาหลัก
