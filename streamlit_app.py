@@ -3,38 +3,27 @@ import pandas as pd
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
-import os
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import load_iris
-
-# ==================== Developer Info ====================
-DEVELOPER_NAME = "นายจตุรภัทร สถาปิตานนท์"
-DEVELOPER_ID = "024"
-
-# ✅ Path ของรูป
-DEVELOPER_IMAGE_PATH = "image/024.jpg"
-
-# ✅ รูปสำรองกรณีหาไฟล์ไม่เจอ
-FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=200&background=667eea&color=fff&bold=true"
-
-# ✅ ตรวจสอบและกำหนดค่า IMAGE_TO_USE
-if os.path.exists(DEVELOPER_IMAGE_PATH):
-    IMAGE_TO_USE = DEVELOPER_IMAGE_PATH
-else:
-    IMAGE_TO_USE = FALLBACK_IMAGE
 
 # ตั้งค่าหน้า
 st.set_page_config(
     page_title="K-Means Clustering App",
     page_icon="🔮",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Custom CSS สำหรับความสวยงาม
 st.markdown("""
     <style>
+    /* ซ่อน Sidebar และเมนูทั้งหมด */
+    #MainMenu {visibility: hidden;}
+    header {visibility: hidden;}
+    .css-1d391kg {display: none;}
+    section[data-testid="stSidebar"] {display: none;}
+    
     /* Main background */
     .main {
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -106,6 +95,14 @@ st.markdown("""
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         transform: translateY(-2px);
     }
+    
+    /* Footer */
+    .footer {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+        margin-top: 3rem;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -114,59 +111,6 @@ st.markdown("""
     <div class="header-container">
         <h1 class="header-title">🔮 K-Means Clustering App</h1>
         <p class="header-subtitle">Interactive Machine Learning Prediction System</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-# ==================== Sidebar with Developer Info ====================
-with st.sidebar:
-    st.markdown("### 👨‍💻 ผู้พัฒนา")
-    
-    # แสดงรูปผู้พัฒนา (สี่เหลี่ยมขอบมน)
-    try:
-        st.image(
-            IMAGE_TO_USE,
-            width=200,
-            use_container_width=True
-        )
-    except Exception:
-        st.image(
-            FALLBACK_IMAGE,
-            width=200,
-            use_container_width=True
-        )
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # กล่องข้อมูลผู้พัฒนา (สไตล์สีเขียว)
-    st.markdown(f"""
-    <div style="
-        background: linear-gradient(135deg, rgba(56, 142, 60, 0.12), rgba(255, 255, 255, 0.02));
-        border: 1px solid rgba(56, 142, 60, 0.25);
-        border-radius: 16px;
-        padding: 1.2rem;
-        text-align: center;
-        margin-top: 0.5rem;
-    ">
-        <p style="
-            color: #2E7D32;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0.3rem 0;
-        ">{DEVELOPER_NAME}</p>
-        
-        <p style="
-            color: #388E3C;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin: 0.2rem 0;
-        "> รหัสนักศึกษา: {DEVELOPER_ID}</p>
-        
-        <p style="
-            color: #7f8c8d;
-            font-size: 0.85rem;
-            font-style: italic;
-            margin: 0.2rem 0;
-        ">ML with Python Developer</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -190,11 +134,13 @@ with tab1:
     
     st.markdown("<br>", unsafe_allow_html=True)
     
+    # ปุ่ม Predict
     if st.button("🔮 Predict Cluster", use_container_width=True):
         input_features = [sepal_length, sepal_width, petal_length, petal_width]
         input_data = np.array([input_features])
         feature_names = ['Sepal Length', 'Sepal Width', 'Petal Length', 'Petal Width']
         
+        # โหลด Iris dataset และฝึกโมเดล
         iris = load_iris()
         X = iris.data
         
@@ -208,11 +154,14 @@ with tab1:
         prediction = int(kmeans.predict(input_scaled)[0])
         cluster_name = iris.target_names[prediction] if prediction < len(iris.target_names) else f"Cluster {prediction}"
         
+        # คำนวณระยะห่างเพื่อหา Confidence
         distances = np.linalg.norm(kmeans.cluster_centers_ - input_scaled, axis=1)
         confidence_calc = (1 / (distances[prediction] + 1e-10)) / sum(1 / (distances + 1e-10)) * 100
         
+        # --- แสดงผลแบบสวยงาม (Prediction Result UI) ---
         st.markdown("<br>", unsafe_allow_html=True)
         
+        # 1. Header ผลลัพธ์
         st.markdown(f"""
             <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 15px; text-align: center; color: white; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
                 <div style="font-size: 1.2rem; opacity: 0.9;">🔮 Prediction Result</div>
@@ -221,6 +170,7 @@ with tab1:
             </div>
             """, unsafe_allow_html=True)
             
+        # 2. Info Cards (3 ใบ)
         st.markdown(f"""
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
                 <div style="background: white; padding: 1.5rem; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-top: 4px solid #667eea;">
@@ -238,6 +188,7 @@ with tab1:
             </div>
             """, unsafe_allow_html=True)
             
+        # 3. Distances Table
         st.markdown("### 📏 Distances to All Cluster Centers")
         distances_df = pd.DataFrame({
             'Cluster': [f'Cluster {i}' for i in range(len(distances))],
@@ -246,6 +197,7 @@ with tab1:
         })
         st.dataframe(distances_df, use_container_width=True, hide_index=True)
         
+        # 4. Radar Chart Visualization
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("### 📊 Feature Visualization (Radar Chart)")
         
@@ -254,6 +206,7 @@ with tab1:
         angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
         angles += angles[:1]
         
+        # Normalize ค่าสำหรับวาดกราฟ (สเกล 0-5 เพื่อความสวยงาม)
         max_vals = X.max(axis=0)
         values = [v / m * 5 for v, m in zip(input_features, max_vals)]
         values += values[:1]
@@ -287,7 +240,7 @@ with tab2:
             st.success("✅ File uploaded successfully!")
             st.dataframe(df.head(), use_container_width=True)
             
-            if st.button(" Predict All Clusters"):
+            if st.button("🔮 Predict All Clusters"):
                 st.info("กำลังประมวลผล... (ฟีเจอร์นี้พร้อมสำหรับการพัฒนาต่อยอด)")
         except Exception as e:
             st.error(f"Error: {e}")
@@ -305,86 +258,10 @@ with tab3:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# ==================== Footer with Developer Info ====================
-footer_html = f"""
-<div style="
-    margin-top: 3rem;
-    padding: 2.5rem 2rem;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-    border: 1px solid rgba(102, 126, 234, 0.1);
-">
-    <div style="
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 2.5rem;
-        flex-wrap: wrap;
-        max-width: 800px;
-        margin: 0 auto;
-    ">
-        <!-- รูปผู้พัฒนา -->
-        <div style="flex-shrink: 0;">
-            <img src="{IMAGE_TO_USE}" 
-                 style="
-                    width: 140px; 
-                    height: 140px; 
-                    border-radius: 16px;
-                    object-fit: cover; 
-                    border: 4px solid #667eea; 
-                    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-                 "
-                 onerror="this.src='{FALLBACK_IMAGE}'">
-        </div>
-        
-        <!-- ข้อความ -->
-        <div style="text-align: left; flex: 1; min-width: 250px;">
-            <p style="
-                font-size: 1.6rem; 
-                font-weight: 700; 
-                color: #2c3e50; 
-                margin: 0 0 0.5rem 0;
-                line-height: 1.3;
-            ">👨‍💻 พัฒนาโดย: นายจตุรภัทร สถาปิตานนท์</p>
-            
-            <p style="
-                font-size: 1.15rem; 
-                color: #667eea; 
-                font-weight: 600; 
-                margin: 0 0 0.4rem 0;
-            ">🆔 รหัสนักศึกษา: 024</p>
-            
-            <p style="
-                font-size: 1rem; 
-                color: #555; 
-                margin: 0.6rem 0 0.3rem 0;
-            ">🎓 Machine Learning for Python Programming Course</p>
-            
-            <p style="
-                font-size: 0.9rem; 
-                color: #888; 
-                margin: 0.3rem 0 0 0;
-            ">Built with ❤️ using Streamlit | © 2026</p>
-        </div>
+# Footer
+st.markdown("""
+    <div class="footer">
+        <p>🎓 Machine Learning for Python Programming Course</p>
+        <p>Built with ❤️ using Streamlit | © 2026</p>
     </div>
-    
-    <!-- Divider -->
-    <div style="
-        margin-top: 2rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid rgba(102, 126, 234, 0.15);
-        text-align: center;
-    ">
-        <p style="
-            font-size: 0.85rem;
-            color: #999;
-            margin: 0;
-        ">
-             K-Means Clustering App • Interactive Machine Learning Prediction System
-        </p>
-    </div>
-</div>
-"""
-
-st.markdown(footer_html, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
