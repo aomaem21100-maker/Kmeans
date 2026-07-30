@@ -11,9 +11,9 @@ from sklearn.datasets import load_iris
 # ==================== Developer Info ====================
 DEVELOPER_NAME = "นายจตุรภัทร สถาปิตานนท์"
 DEVELOPER_ID = "024"
-DEVELOPER_IMAGE_PATH = "D:\Kmeans\Kmeans\image"
 
-# รูปสำรองกรณีหาไฟล์ไม่เจอ (ป้องกันแอป Error)
+# ใช้ relative path (ต้องอัปโหลดรูปเข้า GitHub ก่อน)
+DEVELOPER_IMAGE_PATH = "image/024.jpg"
 FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=200&background=667eea&color=fff&bold=true"
 
 # ตรวจสอบว่าไฟล์มีอยู่จริงหรือไม่
