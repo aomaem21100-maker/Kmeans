@@ -14,14 +14,6 @@ DEVELOPER_ID = "024"
 
 # ใช้ relative path (ต้องอัปโหลดรูปเข้า GitHub ให้ถูกที่)
 DEVELOPER_IMAGE_PATH = "image/024.jpg"
-
-
-# ตรวจสอบว่าไฟล์มีอยู่จริงหรือไม่
-if os.path.exists(DEVELOPER_IMAGE_PATH):
-    IMAGE_TO_USE = DEVELOPER_IMAGE_PATH
-else:
-    IMAGE_TO_USE = DEVELOPER_IMAGE_PATH
-
 # ตั้งค่าหน้า
 st.set_page_config(
     page_title="K-Means Clustering App",
