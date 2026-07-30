@@ -3,9 +3,24 @@ import pandas as pd
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
+import os  # เพิ่ม import os เพื่อตรวจสอบไฟล์
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import load_iris
+
+# ==================== Developer Info ====================
+DEVELOPER_NAME = "นายจตุรภัทร สถาปิตานนท์"
+DEVELOPER_ID = "024"
+DEVELOPER_IMAGE_PATH = "image/024.jpg"
+
+# รูปสำรองกรณีหาไฟล์ไม่เจอ (ป้องกันแอป Error)
+FALLBACK_IMAGE = "https://ui-avatars.com/api/?name=Jaturapat+Sthapitanon&size=200&background=667eea&color=fff&bold=true"
+
+# ตรวจสอบว่าไฟล์มีอยู่จริงหรือไม่
+if os.path.exists(DEVELOPER_IMAGE_PATH):
+    IMAGE_TO_USE = DEVELOPER_IMAGE_PATH
+else:
+    IMAGE_TO_USE = FALLBACK_IMAGE
 
 # ตั้งค่าหน้า
 st.set_page_config(
@@ -99,9 +114,11 @@ st.markdown("""
     /* Footer */
     .footer {
         text-align: center;
-        padding: 2rem;
-        color: #666;
+        padding: 2.5rem 2rem;
         margin-top: 3rem;
+        background: white;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.03);
     }
     </style>
     """, unsafe_allow_html=True)
@@ -258,10 +275,21 @@ with tab3:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# Footer
-st.markdown("""
+# ==================== Footer with Developer Info ====================
+st.markdown(f"""
     <div class="footer">
-        <p>🎓 Machine Learning for Python Programming Course</p>
-        <p>Built with ❤️ using Streamlit | © 2026</p>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+            <!-- รูปผู้พัฒนา พร้อมระบบป้องกัน Error (onerror) -->
+            <img src="{IMAGE_TO_USE}" 
+                 style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #667eea; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);"
+                 onerror="this.src='{FALLBACK_IMAGE}'">
+            
+            <div style="text-align: center;">
+                <p style="font-size: 1.4rem; font-weight: bold; color: #333; margin: 0;">👨‍💻 พัฒนาโดย: {DEVELOPER_NAME}</p>
+                <p style="font-size: 1.1rem; color: #667eea; font-weight: 600; margin: 0.3rem 0;">🆔 รหัสนักศึกษา: {DEVELOPER_ID}</p>
+                <p style="font-size: 0.95rem; color: #666; margin: 0.8rem 0 0.2rem 0;">🎓 Machine Learning for Python Programming Course</p>
+                <p style="font-size: 0.85rem; color: #999; margin: 0;">Built with ❤️ using Streamlit | © 2026</p>
+            </div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
